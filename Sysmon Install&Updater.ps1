@@ -62,5 +62,6 @@ if (get-service $service) {
 
 ##clean up the mess##
 Get-ChildItem -Path "C:\Windows\Temp" *sysmon* -Recurse | Remove-Item -Force -Recurse
+Get-ChildItem -Path "C:\Windows\Temp" *eula* -Recurse | Remove-Item -Force -Recurse
 
 

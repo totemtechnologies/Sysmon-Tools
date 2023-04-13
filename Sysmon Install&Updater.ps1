@@ -2,6 +2,7 @@
 
 Sysmon Management
 
+V1.0.1
 
 This is a demo script inteded for use with sysmon to setup a new installation and if not present, install.  If installation is present
 pull the configuration version and do a check with GitHub.  

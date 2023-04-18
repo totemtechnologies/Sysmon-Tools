@@ -1,4 +1,4 @@
-﻿
+
 <#
 
 
@@ -13,12 +13,6 @@ date column is not sorted newest to oldest
 logs are not generated per day and contain some overlap
 logs do not purge after 30 days
 script does not run automatically, must be configued for a scheduled task
-
-
-
-
-
-
 
 
 #>
@@ -46,6 +40,9 @@ $result = Get-WinEvent -FilterHashtable @{LogName = 'Microsoft-Windows-Sysmon/Op
         
     }
 }
+
+#Craft the first log and setup the sysmonlog pull task
+
 if (Test-Path -Path $logpath\$($logfilehost)_$((Get-Date).ToString('MM-dd-yyyy'))_syslog.csv) {
     
     $result_old = import-csv "$logpath\$($logfilehost)_$((Get-Date).ToString('MM-dd-yyyy'))_syslog.csv"
@@ -65,8 +62,3 @@ if (Test-Path -Path $logpath\$($logfilehost)_$((Get-Date).ToString('MM-dd-yyyy')
    $result | Export-Csv "$logpath\$($logfilehost)_$((Get-Date).ToString('MM-dd-yyyy'))_syslog.csv" 
     
 }
-
-
-
-
- 

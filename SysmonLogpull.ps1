@@ -11,8 +11,14 @@ Known issues:
 File output is not in a readable format for DATE column
 date column is not sorted newest to oldest
 logs are not generated per day and contain some overlap
-logs do not purge after 30 days
-script does not run automatically, must be configued for a scheduled task
+
+
+
+
+
+
+
+
 
 
 #>
@@ -62,3 +68,9 @@ if (Test-Path -Path $logpath\$($logfilehost)_$((Get-Date).ToString('MM-dd-yyyy')
    $result | Export-Csv "$logpath\$($logfilehost)_$((Get-Date).ToString('MM-dd-yyyy'))_syslog.csv" 
     
 }
+
+Get-ChildItem –Path "$logpath" -Recurse | Where-Object {($_.LastWriteTime -lt (Get-Date).AddDays(-30))} | Remove-Item
+
+
+
+ 

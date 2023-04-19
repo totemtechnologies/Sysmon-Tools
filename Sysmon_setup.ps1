@@ -9,7 +9,9 @@ pull the configuration version and do a check with GitHub.
 https://github.com/MicrosoftDocs/sysinternals/blob/main/sysinternals/downloads/sysmon.md
 https://github.com/totemtechnologies/Sysmon-Tools
 
-Version 1.1.5
+Version 1.1.6
+
+v 1.1.6 - Minor clean up and corrections
 
 v 1.1.5 - Created scheduled task for regular updating and log pull
     Moved execution policy to task scheduler.  
@@ -90,6 +92,11 @@ Write-host " "
         Write-host " "
         Invoke-WebRequest 'https://raw.githubusercontent.com/totemtechnologies/Sysmon-Tools/main/sysmonconfig-export.xml' -outfile "C:\Windows\sysmonconfig-export.xml" 
 
+Invoke-WebRequest 'https://raw.githubusercontent.com/totemtechnologies/Sysmon-Tools/main/Sysmon_setup.ps1' -outfile "C:\windows\Logs\Sysmon Logs\sysmon_setup.ps1" 
+Invoke-WebRequest 'https://raw.githubusercontent.com/totemtechnologies/Sysmon-Tools/main/sysmon_updatecheck.xml' -outfile "C:\windows\Logs\Sysmon Logs\sysmon_updatecheck.xml"
+Invoke-WebRequest 'https://raw.githubusercontent.com/totemtechnologies/Sysmon-Tools/main/Sysmonlog_pull.xml' -outfile "C:\windows\Logs\Sysmon Logs\Sysmonlog_pull.xml"
+Invoke-WebRequest 'https://raw.githubusercontent.com/totemtechnologies/Sysmon-Tools/main/SysmonLogpull.ps1' -OutFile 'C:\windows\Logs\Sysmon Logs\SysmonLogpull.ps1'
+
 
 ## Variables in call ##
 
@@ -169,20 +176,15 @@ secedit /export /cfg c:\secpol.cfg
 Write-host "Getting latest updater script"
 Write-host " "
 
-Invoke-WebRequest 'https://raw.githubusercontent.com/totemtechnologies/Sysmon-Tools/main/Sysmon_setup.ps1' -outfile "C:\windows\Logs\Sysmon Logs\sysmon_setup.ps1" 
 
 
 $taskname = "Sysmon Update Check"
 if (Get-ScheduledTask | Where-Object {$_.TaskName -like $taskName }) {
 Write-Host "update Task is already setup"
 Write-host " "
-
 } else {
-
 Write-host "Setting up scheduled updater task"
 Write-host " "
-
-Invoke-WebRequest 'https://raw.githubusercontent.com/totemtechnologies/Sysmon-Tools/main/sysmon_updatecheck.xml' -outfile "C:\windows\Logs\Sysmon Logs\sysmon_updatecheck.xml"
 
 Register-ScheduledTask -xml (Get-Content 'C:\windows\Logs\Sysmon Logs\sysmon_updatecheck.xml' | Out-String) -TaskName "Sysmon Update Check" -Force
 
@@ -196,7 +198,7 @@ Register-ScheduledTask -taskname "Sysmon Update Check" -Action $action -Trigger 
 #>
 }
 
-Invoke-WebRequest 'https://raw.githubusercontent.com/totemtechnologies/Sysmon-Tools/main/Sysmonlog_pull.xml' -outfile "C:\windows\Logs\Sysmon Logs\Sysmonlog_pull.xml"
+
 Register-ScheduledTask -xml (Get-Content 'C:\windows\Logs\Sysmon Logs\SysmonLog_Pull.xml' | Out-String) -TaskName "Sysmon Log Pull" -Force
 
 

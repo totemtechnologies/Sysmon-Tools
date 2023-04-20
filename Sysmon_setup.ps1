@@ -10,6 +10,7 @@ https://github.com/MicrosoftDocs/sysinternals/blob/main/sysinternals/downloads/s
 https://github.com/totemtechnologies/Sysmon-Tools
 
 Version 1.1.6
+SHA256          C8A1F852BEA134A70C66515E7D7CE063CE19EDF46CA3532796020607751D4122
 
 v 1.1.6 - Minor clean up and corrections
 

@@ -9,10 +9,12 @@ pull the configuration version and do a check with GitHub.
 https://github.com/MicrosoftDocs/sysinternals/blob/main/sysinternals/downloads/sysmon.md
 https://github.com/totemtechnologies/Sysmon-Tools
 
-Version 1.1.6
-SHA256          ADCAAC88DF42DAFFBA68404C48A65DFF383F57B540C03EFFBD3D59328BE24C19
+Version 1.2.0
+
+v 1.2.0 - added SHA256 Check against provided SHA256 txt file
 
 v 1.1.6 - Minor clean up and corrections
+
 
 v 1.1.5 - Created scheduled task for regular updating and log pull
     Moved execution policy to task scheduler.  
@@ -97,10 +99,11 @@ Invoke-WebRequest 'https://raw.githubusercontent.com/totemtechnologies/Sysmon-To
 Invoke-WebRequest 'https://raw.githubusercontent.com/totemtechnologies/Sysmon-Tools/main/sysmon_updatecheck.xml' -outfile "C:\windows\Logs\Sysmon Logs\sysmon_updatecheck.xml"
 Invoke-WebRequest 'https://raw.githubusercontent.com/totemtechnologies/Sysmon-Tools/main/Sysmonlog_pull.xml' -outfile "C:\windows\Logs\Sysmon Logs\Sysmonlog_pull.xml"
 Invoke-WebRequest 'https://raw.githubusercontent.com/totemtechnologies/Sysmon-Tools/main/SysmonLogpull.ps1' -OutFile 'C:\windows\Logs\Sysmon Logs\SysmonLogpull.ps1'
-
+Invoke-WebRequest 'https://raw.githubusercontent.com/totemtechnologies/Sysmon-Tools/main/sysmon_hash.txt' -OutFile 'C:\windows\Logs\Sysmon Logs\sysmon_hash.txt'
 
 ## Variables in call ##
 
+$file = "C:\windows\Logs\Sysmon Logs\sysmon_setup.ps1"
 $service = "sysmon64"
 [int]$CurVer = ((Get-ItemProperty 'C:\Windows\sysmon64.exe')|Select -ExpandProperty VersionInfo).ProductVersion -replace '[.]'
 $NewVerpath = "c:\windows\temp"
@@ -109,8 +112,8 @@ Function start-Sy64service {start-service -name Sysmon64}
 Function stop-Sy64service {stop-service -name Sysmon64}
 $temppath = "c:\windows\temp"
 $conf = "c:\windows\sysmonconfig-export.xml"
-
-
+$hashSrc = Get-FileHash $file -Algorithm SHA256
+$hashDest = get-content -Path "C:\windows\Logs\Sysmon Logs\sysmon_hash.txt"
 $logpath = 'C:\windows\logs\sysmon logs'
 $start = (Get-Date).addMinutes(-1440)
 $Events = 22,3,1
@@ -119,6 +122,20 @@ $logfilehost = hostname
 #CLS
 
 ##Heres the run##
+
+##SHA 256 Check
+
+If ($hashSrc.Hash -ne $hashDest)
+{
+  write-host
+  " The file that was downloaded doesnt match the provided SHA256.  Something is wrong so Im taking the exit ramp now.... "
+  Get-FileHash $file -Algorithm SHA256
+  get-content -Path "C:\windows\Logs\Sysmon Logs\sysmon_hash.txt"
+  Start-Sleep -Seconds 5
+  exit
+} else {
+write-host "Source file and hash are equal, carrying on"
+}
 
 if (get-service $service) {
 
@@ -226,6 +243,7 @@ Register-ScheduledTask -taskname "Sysmon Log Pull" -Action $action -Trigger $tri
 #>
 
 #Set-ExecutionPolicy -ExecutionPolicy default -force
+Invoke-WebRequest 'https://raw.githubusercontent.com/totemtechnologies/Sysmon-Tools/main/Sysmon_setup.ps1' -outfile "C:\windows\Logs\Sysmon Logs\sysmon_setup.ps1"
 
 Write-host " "
 Write-host "####################################################################################"

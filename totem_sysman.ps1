@@ -84,7 +84,6 @@ if (Test-Path -Path $Folder) {
     Write-host "created"
     }
 
-#Requires -RunAsAdministrator
 Start-Sleep -Seconds 2
 Write-host " "
 

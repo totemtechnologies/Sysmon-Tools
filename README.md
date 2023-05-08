@@ -1,4 +1,7 @@
 # Sysmon-Tools
+KNOWN ISSUES:
+github is breaking certain switches in the script.  unclear why.  run script as admin from ISE and remedieate switches as necessary.  Sometimes re-running the totem_sysman script will fix the issue.  
+
 
 TLDR:
 Do your homework on this script before using it.

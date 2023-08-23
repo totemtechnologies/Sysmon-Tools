@@ -1,6 +1,6 @@
 # Sysmon-Tools
 KNOWN ISSUES:
-github is breaking certain switches in the script.  unclear why.  run script as admin from ISE and remedieate switches as necessary.  Sometimes re-running the totem_sysman script will fix the issue.  
+github is breaking certain switches in the script.  unclear why.  run script as admin from ISE and remedieate switches as necessary.  Sometimes re-running the totem_sysman script will fix the issue.  You can also just copy the text from the powershell github and paste to a new script doc as admin.  dumb http.
 
 
 TLDR:

@@ -30,7 +30,9 @@ exit
 https://github.com/MicrosoftDocs/sysinternals/blob/main/sysinternals/downloads/sysmon.md
 https://github.com/totemtechnologies/Sysmon-Tools
 
-Version 1.2.5
+Version 1.2.6
+
+v 1.2.6 - fixed updating, still having issues with HTTP.  
 
 v 1.2.5 - added opensource warning; rebranded to avoid naming issues.  Minor cleanup
 

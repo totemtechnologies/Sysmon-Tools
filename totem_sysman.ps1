@@ -84,7 +84,7 @@ if (Test-Path -Path $Folder) {
     Write-host "created"
     }
 
-Start-Sleep -Seconds 2
+#Start-Sleep -Seconds 2
 Write-host " "
 
 function Test-Administrator  
@@ -98,7 +98,7 @@ If (Test-Administrator) {
     Write-Host "User is not running as an admin, exiting"
     Write-host " "
     Write-host "####################################################################################"
-    Start-Sleep -Seconds 1
+    #Start-Sleep -Seconds 1
     stop-transcript
     Exit
     }
@@ -107,11 +107,12 @@ Write-host " "
 #download from sysinternals github
         Write-host "downloading sysmon"
         Write-host " "
-        Invoke-WebRequest 'https://download.sysinternals.com/files/Sysmon.zip' -outfile "C:\Windows\Temp\sysmon.zip" | Write-Output "$(Get-TimeStamp) downloading sysmon" -filepath $syslogout -NoClobber -append
+        Invoke-WebRequest 'https://live.sysinternals.com/Sysmon64.exe' -outfile "C:\Windows\Temp\sysmon64.exe" | Write-Output "$(Get-TimeStamp) downloading sysmon" -filepath $syslogout -NoClobber -append
 #blowup the zip and drop in temp
-        Write-host "unpacking sysmon"
+        <#Write-host "unpacking sysmon"
         Write-host " "
         Expand-archive -literalpath C:\Windows\Temp\sysmon.zip -DestinationPath C:\Windows\Temp 
+        #>
 #Configfile for HBA
         Write-host "Getting config file"
         Write-host " "
@@ -127,9 +128,9 @@ Invoke-WebRequest 'https://raw.githubusercontent.com/totemtechnologies/Sysmon-To
 
 $file = "C:\windows\Logs\Sysmon Logs\totem_sysman.ps1"
 $service = "sysmon64"
-[int]$CurVer = ((Get-ItemProperty 'C:\Windows\sysmon64.exe')|Select -ExpandProperty VersionInfo).ProductVersion -replace '[.]'
+$CurVer = ((Get-Item 'C:\Windows\sysmon64.exe').VersionInfo)
 $NewVerpath = "c:\windows\temp"
-[int]$newver = ((get-itemproperty $newverpath\sysmon64.exe)|Select -ExpandProperty VersionInfo).ProductVersion -replace '[.]' 
+$newver = ((Get-Item $newverpath\sysmon64.exe).VersionInfo) 
 Function start-Sy64service {start-service -name Sysmon64}
 Function stop-Sy64service {stop-service -name Sysmon64}
 $temppath = "c:\windows\temp"
@@ -166,20 +167,20 @@ if (get-service $service) {
     Write-host " "
     Function stop-Sy64service {stop-service -name Sysmon64}
 
-        If ($CurVer -lt $newver){
+        If ($curver.FileVersion -lt $newver.FileVersion){
         
-        Write-Host "Current sysmon is out of date" 
+        Write-Host "Current sysmon is out of date" -ForegroundColor Yellow
         Write-host " "
-        Start-Process -wait -FilePath "$temppath\sysmon64.exe" -ArgumentList "/u"
-
+        Start-Process -wait -FilePath "c:\windows\sysmon64.exe" -ArgumentList "-u force"
+        remove-item C:\Windows\sysmon64.exe
         Start-Process -wait -FilePath "$temppath\sysmon64.exe" -ArgumentList "/i $conf" 
         
         } else {
         
-        write-host "Current version is installed" 
+        write-host "Current version is installed" -ForegroundColor Green
         Write-host " "
         Start-Process -wait -FilePath "$temppath\sysmon64.exe" -ArgumentList "/c $conf"
-        write-host "Configuration updated..." 
+        write-host "Configuration updated..." -ForegroundColor Yellow
         Write-host " "
         
         }

@@ -46,7 +46,7 @@
   <Actions Context="Author">
     <Exec>
       <Command>%SystemRoot%\system32\WindowsPowerShell\v1.0\powershell.exe</Command>
-      <Arguments>-file "C:\windows\Logs\Sysmon Logs\sysmon_setup.ps1"</Arguments>
+      <Arguments>-file "C:\windows\Logs\Sysmon Logs\Totem_SysMan.ps1"</Arguments>
     </Exec>
   </Actions>
 </Task>
